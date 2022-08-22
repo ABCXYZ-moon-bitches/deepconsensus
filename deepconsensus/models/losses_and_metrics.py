@@ -360,7 +360,8 @@ class AlignmentLoss(tf.keras.losses.Loss):
     b, m = tf.shape(subs_costs)[0], tf.shape(subs_costs)[1]
     n = tf.shape(subs_costs)[2]  # We assume tf.shape(y_pred)[0] equals b.
     # Computes and rearranges cost tensors for vectorized wavefront iterations.
-    subs_costs = wavefrontify(subs_costs)
+    subs_costs = tf.cast(wavefrontify(subs_costs), tf.float16)
+    
     ins_costs = wavefrontify_vec(ins_costs, m + 1)
 
     # Sets up reduction operators.
@@ -389,7 +390,8 @@ class AlignmentLoss(tf.keras.losses.Loss):
       # Masks invalid entries in "wavefrontified" value tensor.
       j_range = k - i_range
       inv_mask = tf.logical_and(j_range >= 0, j_range <= n)[:, tf.newaxis]
-
+      
+   
       o_m = v_p2 + subs_costs[k - 2]  # [m, b]
       o_i = v_p1 + ins_costs[k - 1]  # [m + 1, b]
       v_p2 = v_p1[:-1]
