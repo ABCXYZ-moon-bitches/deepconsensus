@@ -278,6 +278,7 @@ class EncoderOnlyTransformer(tf.keras.Model):
         with tf.name_scope('add_pos_encoding'):
           pos_encoding = self.position_embedding(inputs=encoder_inputs)
           pos_encoding = tf.cast(pos_encoding, self.params['dtype'])
+          encoder_inputs = tf.cast(encoder_inputs, self.params['dtype'])
           encoder_inputs += pos_encoding
 
       # Add dropout when training.
